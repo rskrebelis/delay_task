@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Numbers to Letters with Timer</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: Arial, sans-serif;
+      padding-top: 50px;
+    }
+    #display {
+      font-size: 2em;
+      margin-bottom: 20px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .buttons button {
+      padding: 20px 30px;
+      font-size: 1.5em;
+      cursor: pointer;
+    }
+    #counter {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    #timer {
+      font-size: 1.2em;
+      margin-bottom: 20px;
+    }
+    #reset {
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    #max-score {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="display">Press a Number</div>
+
+  <div id="max-score">
+    Set Max Score: <input type="number" id="maxScoreInput" value="10" min="1">
+  </div>
+
+  <div class="buttons">
+    <button class="number-btn">1</button>
+    <button class="number-btn">2</button>
+    <button class="number-btn">3</button>
+    <button class="number-btn">4</button>
+    <button class="number-btn">5</button>
+    <button class="number-btn">6</button>
+  </div>
+
+  <div id="counter">Counter: 0</div>
+  <div id="timer">Time: 0.00 seconds</div>
+
+  <button id="reset">Reset Counter</button>
+
+  <script>
+    const display = document.getElementById('display');
+    const counterDisplay = document.getElementById('counter');
+    const timerDisplay = document.getElementById('timer');
+    const resetButton = document.getElementById('reset');
+    const maxScoreInput = document.getElementById('maxScoreInput');
+    let counter = 0;
+    let startTime = null;
+    let timerInterval = null;
+    const letters = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    function startTimer() {
+      startTime = performance.now();
+      timerInterval = setInterval(() => {
+        const elapsedTime = (performance.now() - startTime) / 1000;
+        timerDisplay.textContent = `Time: ${elapsedTime.toFixed(2)} seconds`;
+      }, 10);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+    }
+
+    document.querySelectorAll('.number-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        if (counter === 0 && startTime === null) {
+          startTimer();
+        }
+
+        const randomLetter = letters[Math.floor(Math.random() * letters.length)];
+        display.textContent = randomLetter;
+        counter++;
+        counterDisplay.textContent = `Counter: ${counter}`;
+
+        const maxScore = parseInt(maxScoreInput.value, 10);
+        if (counter >= maxScore) {
+          stopTimer();
+        }
+      });
+    });
+
+    resetButton.addEventListener('click', () => {
+      counter = 0;
+      startTime = null;
+      clearInterval(timerInterval);
+      timerDisplay.textContent = `Time: 0.00 seconds`;
+      counterDisplay.textContent = `Counter: ${counter}`;
+      display.textContent = 'Press a Number';
+    });
+  </script>
+
+</body>
+</html>
